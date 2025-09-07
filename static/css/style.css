@@ -1,0 +1,222 @@
+/* Desain Tema Minimalis & Modern */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #121212; /* Darker background */
+    color: #e0e0e0; /* Lighter text color */
+    margin: 0;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto; /* Menghilangkan margin top/bottom agar header menempel */
+    min-height: 100vh; /* Agar footer selalu di bawah jika konten sedikit */
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+header {
+    background-color: #1f1f1f; /* Darker header background */
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    position: sticky; /* Agar header tetap di atas saat scroll */
+    top: 0;
+    z-index: 1000;
+}
+
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-bar h1 {
+    font-size: 1.5rem; /* Ukuran font lebih kecil untuk header bar */
+    font-weight: 600;
+    margin: 0;
+}
+
+.header-bar .menu-icon,
+.header-bar .search-icon {
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #bb86fc; /* Accent color */
+    transition: color 0.2s;
+}
+
+.header-bar .search-icon:hover {
+    color: #bb86fc;
+}
+
+/* --- New Hamburger Menu Styles --- */
+.hamburger-menu {
+    height: 100%;
+    width: 0; /* Initially hidden */
+    position: fixed;
+    z-index: 2000;
+    top: 0;
+    left: 0;
+    background-color: #181818;
+    overflow-x: hidden;
+    transition: 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smoother transition */
+    padding-top: 20px;
+    box-shadow: 3px 0px 15px rgba(0,0,0,0.5);
+}
+
+.hamburger-menu .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 2.5rem;
+    color: #818181;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.hamburger-menu .close-btn:hover {
+    color: #f1f1f1;
+}
+
+.hamburger-menu .menu-items {
+    position: relative;
+    top: 60px; /* Push items below the close button */
+    width: 100%;
+    text-align: left;
+}
+
+.hamburger-menu a {
+    padding: 12px 12px 12px 32px;
+    text-decoration: none;
+    font-size: 1.2rem; /* Adjusted font size */
+    color: #a0a0a0;
+    display: block;
+    transition: 0.3s;
+    border-bottom: 1px solid #2a2a2a; /* Separator */
+}
+.hamburger-menu a:last-child{
+    border-bottom: none;
+}
+
+.hamburger-menu a:hover {
+    color: #ffffff;
+    background-color: #bb86fc;
+}
+/* --- End Hamburger Menu Styles --- */
+
+
+/* Search Overlay Styling */
+.search-overlay {
+    display: none; /* Default hidden */
+    padding-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 15px;
+}
+
+.search-overlay input {
+    flex-grow: 1;
+    padding: 0.75rem;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: #2c2c2c; /* Darker input background */
+    color: #e0e0e0;
+}
+
+.search-overlay button {
+    padding: 0.75rem 1.2rem;
+    border: none;
+    background-color: #bb86fc; /* Accent color for button */
+    color: #121212; /* Dark text for button */
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.search-overlay button:hover {
+    background-color: #9a68da; /* Slightly darker accent */
+}
+
+
+main.topic-list {
+    flex-grow: 1; /* Agar main content mengisi ruang kosong */
+    padding: 1rem;
+    padding-top: 1.5rem; /* Sedikit padding atas */
+}
+
+.topic-card {
+    background-color: #1f1f1f; /* Darker card background */
+    border: 1px solid #3a3a3a;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem; /* Menyesuaikan padding */
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    cursor: pointer; /* Menandakan bisa diklik */
+    transition: background-color 0.2s;
+}
+
+.topic-card:hover {
+    background-color: #2c2c2c; /* Slightly lighter on hover */
+}
+
+.topic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topic-card h2 {
+    margin: 0;
+    font-size: 1.2rem; /* Ukuran judul lebih kecil */
+    color: #e0e0e0;
+}
+
+.expand-icon {
+    font-size: 1rem;
+    color: #bb86fc; /* Accent color */
+    transition: transform 0.2s;
+}
+
+.summary-content {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #3a3a3a; /* Garis pemisah */
+}
+
+.summary-content.hidden {
+    display: none;
+}
+
+.topic-card .summary {
+    color: #c0c0c0; /* Lighter gray for summary */
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.topic-card .meta {
+    font-size: 0.75rem;
+    color: #888;
+    text-align: right;
+}
+
+.loading-message,
+.no-results,
+.error-message {
+    text-align: center;
+    color: #888;
+    padding: 2rem;
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    margin-top: 1rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: auto; /* Mendorong footer ke bawah */
+    padding: 1.5rem;
+    color: #888;
+    background-color: #1f1f1f;
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.4);
+}

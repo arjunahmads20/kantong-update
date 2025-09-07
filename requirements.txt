@@ -4,3 +4,9 @@ autopep8
 
 # App
 flask
+
+Flask-SQLAlchemy
+Flask-Migrate
+python-dotenv
+trendspy # pytrends is no longer work
+openai

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kantong Update</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <nav id="hamburger-nav" class="hamburger-menu">
+        <a href="javascript:void(0)" class="close-btn">&times;</a>
+        <div class="menu-items">
+            <a href="/about">Tentang Kami</a>
+            <a href="/privacy">Kebijakan Privasi</a>
+            <a href="/terms">Ketentuan Layanan</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <div class="header-bar">
+                <i class="fas fa-bars menu-icon"></i> <h1>Trending Hari ini</h1>
+                <i class="fas fa-search search-icon" id="toggle-search"></i> </div>
+            <div class="search-overlay" id="search-overlay">
+                <input type="text" id="search-input" placeholder="Cari topik...">
+                <button id="search-button">Cari</button>
+            </div>
+        </header>
+
+        <main class="topic-list" id="topic-list">
+            <p class="loading-message">Memuat topik...</p>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Kantong Update</p>
+        </footer>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const topicList = $('#topic-list');
+            const searchInput = $('#search-input');
+            const searchButton = $('#search-button');
+            const toggleSearchIcon = $('#toggle-search');
+            const searchOverlay = $('#search-overlay');
+            let currentKeyword = '';
+            const menuIcon = $('.menu-icon');
+            const closeBtn = $('.close-btn');
+            const hamburgerNav = $('#hamburger-nav');
+
+            // --- Hamburger Menu ---
+            menuIcon.on('click', function() {
+                hamburgerNav.css('width', '280px');
+            });
+
+            closeBtn.on('click', function() {
+                hamburgerNav.css('width', '0');
+            });
+
+            // Fungsi untuk mengambil dan menampilkan topik
+            async function fetchAndDisplayTopics(keyword = '') {
+                topicList.html('<p class="loading-message">Memuat topik...</p>'); // Tampilkan loading
+                try {
+                    const response = await fetch(`/api/topics?keyword=${encodeURIComponent(keyword)}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const topics = await response.json();
+                    
+                    topicList.empty(); // Kosongkan list topik yang sudah ada
+                    
+                    if (topics.length === 0) {
+                        topicList.append('<p class="no-results">Tidak ada topik yang ditemukan.</p>');
+                    } else {
+                        topics.forEach(topic => {
+                            const date = new Date(topic.datetime_added).toLocaleDateString('id-ID', {
+                                day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                            });
+                            const topicCard = `
+                                <article class="topic-card">
+                                    <div class="topic-header">
+                                        <h2>${topic.title}</h2>
+                                        <i class="fas fa-chevron-down expand-icon"></i>
+                                    </div>
+                                    <div class="summary-content hidden">
+                                        <p class="summary">${topic.aiSummarization}</p>
+                                        <p class="meta">Ditambahkan pada: ${date}</p>
+                                    </div>
+                                </article>
+                            `;
+                            topicList.append(topicCard);
+                        });
+                    }
+                } catch (error) {
+                    console.error("Gagal mengambil topik:", error);
+                    topicList.html('<p class="error-message">Gagal memuat topik. Silakan coba lagi nanti.</p>');
+                }
+            }
+
+            // Panggil pertama kali saat halaman dimuat
+            fetchAndDisplayTopics();
+
+            // Toggle search overlay
+            toggleSearchIcon.on('click', function() {
+                searchOverlay.slideToggle(200, function() {
+                    if (searchOverlay.is(':visible')) {
+                        searchInput.focus();
+                    }
+                });
+            });
+
+            // Event handler untuk tombol pencarian
+            searchButton.on('click', function() {
+                currentKeyword = searchInput.val();
+                fetchAndDisplayTopics(currentKeyword);
+            });
+
+            // Event handler untuk menekan Enter di input pencarian
+            searchInput.on('keypress', function(e) {
+                if (e.which == 13) { // Keycode for Enter
+                    searchButton.click();
+                }
+            });
+
+            // Event handler untuk expand/collapse ringkasan
+            topicList.on('click', '.topic-header', function() {
+                const summaryContent = $(this).next('.summary-content');
+                const icon = $(this).find('.expand-icon');
+                summaryContent.slideToggle(200, function() {
+                    if (summaryContent.is(':visible')) {
+                        icon.removeClass('fa-chevron-down').addClass('fa-chevron-up');
+                    } else {
+                        icon.removeClass('fa-chevron-up').addClass('fa-chevron-down');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,12 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hello World</title>
-  </head>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Topics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-  <body>
-    <h1>Hello World</h1>
-  </body>
+<style>
+
+  /* General Body & Typography */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.header {
+    background-color: #ffffff;
+    padding: 2rem;
+    text-align: center;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+/* Main Container & Layout */
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.topic-list {
+    display: grid;
+    gap: 2rem;
+}
+
+/* Card Styling */
+.card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-header {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+    overflow: hidden;
+}
+
+.card-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.card-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    color: #fff;
+    width: 100%;
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+
+.card-content {
+    padding: 1.5rem;
+    background-color: #f9f9f9;
+}
+
+.card-summary {
+    font-size: 1rem;
+    color: #555;
+}
+
+.ai-summary-container {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: max-height 0.4s ease, opacity 0.4s ease, transform 0.4s ease;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #ddd;
+}
+
+.ai-summary-text {
+    font-style: italic;
+    color: #006064; /* Teal color */
+    font-weight: 400;
+}
+
+/* Expand / Collapse Logic */
+.card.expanded .ai-summary-container {
+    max-height: 200px; /* Nilai yang cukup besar untuk menampung teks */
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.expand-btn {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border-radius: 0 0 12px 12px;
+}
+
+.expand-btn:hover {
+    background-color: #45a049;
+}
+
+
+</style>
+  </head>
+<body>
+    <header class="header">
+        <h1>Trending Topics</h1>
+    </header>
+
+    <main class="container">
+        <div id="topic-list" class="topic-list">
+            </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('/api/topics')
+                .then(response => response.json())
+                .then(data => {
+                    const topicList = document.getElementById('topic-list');
+                    data.forEach(topic => {
+                        const card = document.createElement('div');
+                        card.classList.add('card');
+                        card.innerHTML = `
+                            <div class="card-header">
+                                <img src="${topic.image_url}" alt="${topic.title}" class="card-image">
+                                <h2 class="card-title">${topic.title}</h2>
+                            </div>
+                            <div class="card-content">
+                                <p class="card-summary">${topic.summary}</p>
+                                <div class="ai-summary-container">
+                                    <p class="ai-summary-text">${topic.ai_summary}</p>
+                                </div>
+                            </div>
+                            <button class="expand-btn">Expand</button>
+                        `;
+                        topicList.appendChild(card);
+                    });
+
+                    // Tambahkan event listener untuk tombol expand
+                    document.querySelectorAll('.expand-btn').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const card = event.target.closest('.card');
+                            card.classList.toggle('expanded');
+                            event.target.textContent = card.classList.contains('expanded') ? 'Collapse' : 'Expand';
+                        });
+                    });
+                });
+        });
+    </script>
+</body>
 </html>
+
