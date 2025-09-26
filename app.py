@@ -38,6 +38,7 @@ class Topic(db.Model):
 
 @app.route('/')
 def index_page():
+    return render_template('index.html')
 
 # API route for fetching the topics data
 @app.route('/api/topics', methods=['GET'])
