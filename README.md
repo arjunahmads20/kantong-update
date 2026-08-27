@@ -1,7 +1,7 @@
-# Flask Web App Starter
+# Kantong Update
 
-A Flask starter template as per [these docs](https://flask.palletsprojects.com/en/3.0.x/quickstart/#a-minimal-application).
+A webapp that fetchs current trending news around the world.
 
-## Getting Started
-
-Previews should run automatically when starting a workspace.
+## Features:
+- AI summary: Summary your news so no need to read long text news to stay up to date.
+- Simple UI: Just press the dropdown button to get the main idea of any news.
